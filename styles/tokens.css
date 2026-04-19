@@ -1,0 +1,166 @@
+/* Ranfurlie SWP — design tokens */
+:root {
+  /* Warm turf palette */
+  --ink: #1a1f1a;
+  --ink-2: #2d342d;
+  --ink-soft: #5a625a;
+  --ink-faint: #8a8f86;
+  --rule: #d8d3c4;
+  --rule-soft: #e8e2d1;
+
+  /* Sandstone / paper */
+  --paper: #faf6eb;
+  --paper-2: #f3ecd8;
+  --paper-3: #ebe2c8;
+  --cream: #fbf8ee;
+
+  /* Turf greens */
+  --fairway: #2d4a2b;        /* deep */
+  --fairway-2: #3a5e36;
+  --green: #6b8e4e;           /* fresh */
+  --green-soft: #a8bc88;
+  --moss: #4a6b3a;
+
+  /* Risk */
+  --risk-high: #b04a2f;       /* clay red */
+  --risk-high-bg: #f3dfd3;
+  --risk-med: #c9832a;        /* amber */
+  --risk-med-bg: #f6e6c6;
+  --risk-low: #6b8e4e;
+  --risk-low-bg: #e2ebd1;
+
+  /* Status */
+  --ok: #3f6b2f;
+  --ok-bg: #e2ebd1;
+  --warn: #c9832a;
+  --warn-bg: #f6e6c6;
+  --overdue: #b04a2f;
+  --overdue-bg: #f3dfd3;
+
+  /* Type */
+  --font-display: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+  --font-body: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  /* Radii */
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-3: 12px;
+  --r-4: 16px;
+
+  /* Shadow */
+  --shadow-1: 0 1px 0 rgba(26,31,26,0.04), 0 1px 2px rgba(26,31,26,0.06);
+  --shadow-2: 0 2px 4px rgba(26,31,26,0.06), 0 8px 20px rgba(26,31,26,0.08);
+  --shadow-lift: 0 12px 40px rgba(26,31,26,0.18);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Utility */
+.mono { font-family: var(--font-mono); font-feature-settings: "ss01"; }
+.display { font-family: var(--font-display); letter-spacing: -0.01em; }
+.caps { text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; font-family: var(--font-mono); color: var(--ink-soft); }
+.rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
+.rule-soft { height: 1px; background: var(--rule-soft); border: 0; margin: 0; }
+
+/* Placeholder pattern */
+.ph-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 8px,
+    rgba(26,31,26,0.04) 8px 9px
+  );
+  background-color: var(--paper-2);
+  border: 1px dashed var(--rule);
+  border-radius: var(--r-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: var(--r-2);
+  border: 1px solid var(--rule);
+  background: var(--cream);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.12s ease;
+}
+.btn:hover { background: var(--paper-2); }
+.btn-primary {
+  background: var(--fairway);
+  color: var(--cream);
+  border-color: var(--fairway);
+}
+.btn-primary:hover { background: var(--fairway-2); }
+.btn-primary:disabled {
+  background: var(--ink-faint);
+  border-color: var(--ink-faint);
+  cursor: not-allowed;
+}
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--paper-2); }
+
+/* Chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
+}
+.chip-high { background: var(--risk-high-bg); color: var(--risk-high); }
+.chip-med { background: var(--risk-med-bg); color: var(--risk-med); }
+.chip-low { background: var(--risk-low-bg); color: var(--risk-low); }
+.chip-ok { background: var(--ok-bg); color: var(--ok); }
+.chip-warn { background: var(--warn-bg); color: var(--warn); }
+.chip-overdue { background: var(--overdue-bg); color: var(--overdue); }
+.chip-muted { background: var(--paper-2); color: var(--ink-soft); border-color: var(--rule); }
+
+/* Card */
+.card {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-3);
+  box-shadow: var(--shadow-1);
+}
+
+/* Scrollbar (subtle) */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 10px; border: 2px solid var(--paper); }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--fairway);
+  outline-offset: 2px;
+}
