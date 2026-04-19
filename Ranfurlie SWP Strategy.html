@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ranfurlie SWP — Strategy & Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/deck.css">
+<style>
+  body { background: #222; }
+</style>
+</head>
+<body>
+<deck-stage width="1440" height="900">
+
+  <!-- 01 Cover -->
+  <section class="slide slide--dark">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie Golf Club</div>
+      <div>Safe Work Procedures · Strategy v1 · Apr 2026</div>
+    </div>
+    <div class="slide-body" style="justify-content: flex-end; padding-bottom: 90px;">
+      <div class="eyebrow">Internal · prepared for Andrew &amp; Club Manager</div>
+      <h1 class="hdisplay" style="font-size: 156px; letter-spacing: -0.02em;">
+        Safe Work<br>
+        <em style="font-style: italic; color: #c8d6a8;">Procedures,</em><br>
+        signed.
+      </h1>
+      <div class="lede" style="margin-top: 28px; max-width: 760px;">
+        A system that houses Ranfurlie's ~40 SWPs, walks staff through them, captures audit-defensible sign-off, and nudges people in Slack before their training lapses. Built for the greens shed, not the head office.
+      </div>
+    </div>
+    <div class="slide-num">01</div>
+  </section>
+
+  <!-- 02 The problem -->
+  <section class="slide">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Problem</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">Where we are today</div>
+      <div class="hdisplay h2" style="margin-bottom: 20px;">Good procedures,<br>poor paper trail.</div>
+      <div class="lede" style="margin-bottom: 48px;">A Python script is generating ~40 SWPs against a Kobelco master template. We have the documents. What we don't have is proof that the right people read them — and a way to catch lapses before WorkSafe does.</div>
+
+      <div class="grid-3" style="margin-top: auto;">
+        <div class="block">
+          <div class="caps" style="color: var(--risk-high);">Audit risk</div>
+          <div class="hdisplay h4" style="margin: 8px 0 6px;">No signed record</div>
+          <div class="body">Nothing ties individual staff to specific SWP versions with a timestamp. An OHS inspector asks "who is competent on chainsaws?" and we can't prove it.</div>
+        </div>
+        <div class="block">
+          <div class="caps" style="color: var(--risk-med);">Operational risk</div>
+          <div class="hdisplay h4" style="margin: 8px 0 6px;">No expiry visibility</div>
+          <div class="body">Competencies never renew. A greenkeeper who did an induction in 2023 is still "trained" in the filing cabinet, even if they've never touched a verti-drain since.</div>
+        </div>
+        <div class="block">
+          <div class="caps" style="color: var(--risk-low);">Adoption risk</div>
+          <div class="hdisplay h4" style="margin: 8px 0 6px;">Clunky &gt; paper</div>
+          <div class="body">Tech-literacy varies wildly across 17 staff — full-time, casual, apprentices. If the tool has friction, it'll be worse than the status quo. We have to out-simple the filing cabinet.</div>g cabinet.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">02</div>
+  </section>
+
+  <!-- 03 Recommendation -->
+  <section class="slide slide--cream">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Recommendation</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">The call</div>
+      <div class="hdisplay h2" style="max-width: 1100px; margin-bottom: 20px;">
+        Ship a small, purpose-built<br>web app. Keep the stack behind it.
+      </div>
+      <div class="lede" style="margin-bottom: 40px; max-width: 1000px;">
+        Notion is our single source of truth for <em>content</em>. Slack is our delivery channel. Zapier is the glue. But the <em>read-and-sign</em> experience — the part staff actually touch — deserves a tiny dedicated interface. That's the whole value.
+      </div>
+
+      <div class="grid-3">
+        <div class="block">
+          <div class="caps">1 · Library</div>
+          <div class="hdisplay h4" style="margin: 8px 0 10px;">Notion</div>
+          <div class="body">Structured DB of every SWP. Authored here, version-controlled, published via API. Andrew and Ben already work here.</div>
+        </div>
+        <div class="block" style="background: var(--fairway); color: var(--cream); border-color: var(--fairway);">
+          <div class="caps" style="color: #c8d6a8;">2 · Interface</div>
+          <div class="hdisplay h4" style="margin: 8px 0 10px;">SWP web app</div>
+          <div class="body">Mobile-first. Renders SWPs, enforces hazard confirmation, captures typed signature + timestamp + IP. Reads/writes to the compliance DB.</div>
+        </div>
+        <div class="block">
+          <div class="caps">3 · Nudge</div>
+          <div class="hdisplay h4" style="margin: 8px 0 10px;">Slack + Zapier</div>
+          <div class="body">Scheduled DMs on lead-time + overdue. Block Kit cards deep-link into the app. Supervisor CC at day 3, lockout at day 7.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 36px; padding: 20px 24px; border-left: 3px solid var(--fairway); background: var(--cream); border-radius: 4px; font-size: 15px; max-width: 1100px;">
+        <strong>Why not pure Notion?</strong> Notion can hold the data, but it can't gate sign-off behind hazard confirmation, nor capture a tamper-resistant audit record. Forms are ugly. Mobile is clunky. We'd be fighting it.<br><br>
+        <strong>Why not pure Slack modals?</strong> A chainsaw SWP is 4 pages. You can't read that in a modal. Slack is the notification layer, not the document layer.
+      </div>
+    </div>
+    <div class="slide-num">03</div>
+  </section>
+
+  <!-- 04 Architecture -->
+  <section class="slide">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Architecture</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">System map</div>
+      <div class="hdisplay h3" style="margin-bottom: 30px;">Three services, one compliance DB.</div>
+
+      <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; gap: 20px;">
+        <!-- Sources -->
+        <div class="block">
+          <div class="caps">Authoring</div>
+          <div class="hdisplay h4" style="margin: 8px 0 10px;">Notion DB: SWPs</div>
+          <ul class="body" style="margin: 0; padding-left: 18px; color: var(--ink-soft);">
+            <li>Python generator pushes MD → Notion API</li>
+            <li>Fields: code, version, risk, renewMonths, hazards[], quiz[]</li>
+            <li>Andrew reviews &amp; publishes</li>
+          </ul>
+        </div>
+        <div class="block block-dark">
+          <div class="caps">Experience</div>
+          <div class="hdisplay h4" style="margin: 8px 0 10px; color: var(--cream);">SWP web app</div>
+          <div class="body" style="color: rgba(255,255,255,0.8);">
+            React + Supabase (Postgres + auth). Hosted on Vercel. SSO via Google Workspace. Mobile-first, installable as PWA. ~2-3 weeks build.
+          </div>
+        </div>
+        <div class="block">
+          <div class="caps">Delivery</div>
+          <div class="hdisplay h4" style="margin: 8px 0 10px;">Slack App + Zapier</div>
+          <ul class="body" style="margin: 0; padding-left: 18px; color: var(--ink-soft);">
+            <li>Scheduled zap reads expiries nightly</li>
+            <li>Block Kit card with CTA → app deep-link</li>
+            <li>Supervisor CC channel: #swp-escalations</li>
+          </ul>
+        </div>
+
+        <!-- Central DB -->
+        <div class="block" style="grid-column: 1 / -1; background: var(--ink); color: var(--cream); border-color: var(--ink);">
+          <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 32px; align-items: center;">
+            <div>
+              <div class="caps" style="color: var(--green-soft);">The backbone</div>
+              <div class="hdisplay h3" style="color: var(--cream); margin-top: 6px;">Compliance DB</div>
+              <div class="mono-sm" style="color: rgba(255,255,255,0.55); margin-top: 6px;">supabase.postgres.swp_signoffs</div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 12px; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 14px 18px; border-radius: 8px; color: #e2ebd1;">
+              <div style="color: #c8d6a8;">TABLE signoff</div>
+              <div>  id · staff_id · swp_id · swp_version_hash</div>
+              <div>  signed_at (tz) · signed_ip · user_agent</div>
+              <div>  signature_name · hazard_acks jsonb</div>
+              <div>  quiz_result jsonb · expires_at</div>
+              <div>  supersedes_id → prior signoff</div>
+            </div>
+            <div>
+              <div class="caps" style="color: var(--green-soft);">Principles</div>
+              <ul class="body" style="color: rgba(255,255,255,0.85); margin: 6px 0 0; padding-left: 18px; font-size: 14px;">
+                <li>Append-only — never update</li>
+                <li>Version hash locks content</li>
+                <li>Exportable as CSV for auditors</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">04</div>
+  </section>
+
+  <!-- 05 Data model -->
+  <section class="slide slide--cream">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Data model</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">Four tables. No more.</div>
+      <div class="hdisplay h3" style="margin-bottom: 28px;">Small schema, defensible trail.</div>
+
+      <div class="grid-4" style="flex: 1;">
+        <div class="block" style="display: flex; flex-direction: column;">
+          <div class="caps">Table 01</div>
+          <div class="hdisplay h4" style="margin: 6px 0 12px;">staff</div>
+          <div class="mono-sm" style="color: var(--ink-soft); line-height: 1.75; flex: 1;">
+            id (uuid)<br>
+            name<br>
+            slack_user_id<br>
+            email<br>
+            role<br>
+            employment_type<br>
+            supervisor_id → staff<br>
+            active_from · active_to
+          </div>
+          <div class="body" style="color: var(--ink-soft); font-size: 13px; margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px;">
+            Synced nightly from Google Workspace + casual roster.
+          </div>
+        </div>
+
+        <div class="block" style="display: flex; flex-direction: column;">
+          <div class="caps">Table 02</div>
+          <div class="hdisplay h4" style="margin: 6px 0 12px;">swp</div>
+          <div class="mono-sm" style="color: var(--ink-soft); line-height: 1.75; flex: 1;">
+            id · code<br>
+            title · category<br>
+            risk (H/M/L)<br>
+            renew_months<br>
+            current_version<br>
+            notion_page_id<br>
+            published_at<br>
+            retired_at
+          </div>
+          <div class="body" style="color: var(--ink-soft); font-size: 13px; margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px;">
+            Header row per SWP. Content lives in <em>swp_version</em>.
+          </div>
+        </div>
+
+        <div class="block" style="background: var(--fairway); color: var(--cream); border-color: var(--fairway); display: flex; flex-direction: column;">
+          <div class="caps" style="color: #c8d6a8;">Table 03 · hero</div>
+          <div class="hdisplay h4" style="margin: 6px 0 12px; color: var(--cream);">swp_version</div>
+          <div class="mono-sm" style="color: rgba(255,255,255,0.8); line-height: 1.75; flex: 1;">
+            id · swp_id<br>
+            version (e.g. 2.1)<br>
+            content_hash (sha256)<br>
+            body_md · hazards jsonb<br>
+            quiz jsonb · ppe[]<br>
+            approved_by → staff<br>
+            approved_at<br>
+            change_note
+          </div>
+          <div class="body" style="color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px;">
+            Hash guarantees sign-off is bound to exact content.
+          </div>
+        </div>
+
+        <div class="block" style="display: flex; flex-direction: column;">
+          <div class="caps">Table 04</div>
+          <div class="hdisplay h4" style="margin: 6px 0 12px;">signoff</div>
+          <div class="mono-sm" style="color: var(--ink-soft); line-height: 1.75; flex: 1;">
+            id · staff_id<br>
+            swp_version_id<br>
+            signed_at (utc+tz)<br>
+            signed_ip · user_agent<br>
+            signature_name<br>
+            hazard_acks jsonb<br>
+            quiz_result jsonb<br>
+            expires_at
+          </div>
+          <div class="body" style="color: var(--ink-soft); font-size: 13px; margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px;">
+            <strong>Append-only.</strong> Renewal = new row. Full history preserved.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 22px; padding: 16px 22px; background: var(--cream); border: 1px solid var(--rule); border-radius: 10px; display: flex; gap: 28px; font-size: 13px;">
+        <div><strong>Example row:</strong></div>
+        <div class="mono-sm" style="color: var(--ink-soft);">nathandrew619 · swp_002_v3 · 2026-04-19T14:32:00+10 · 10.4.22.18 · "Nathan Drew" · 6/6 hazards ack · 3/3 quiz · expires 2026-10-19</div>
+      </div>
+    </div>
+    <div class="slide-num">05</div>
+  </section>
+
+  <!-- 06 Staff flow -->
+  <section class="slide">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>User flow · staff</div>
+    </div>
+    <div class="slide-body" style="padding-bottom: 50px;">
+      <div class="eyebrow">Flow A · day-in-the-life</div>
+      <div class="hdisplay h3" style="margin-bottom: 32px;">From DM to signed in 4 minutes.</div>
+
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; flex: 1;">
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green); letter-spacing: 0.08em;">STEP 01</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 24px;">Slack DM lands</div><div class="body" style="color: var(--ink-soft); flex: 1;">07:04 AM on expiry-minus-7. Bot: "Your chainsaw training expires Mon 26 Apr. Takes 4 min."</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Trigger · cron / Zapier</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green); letter-spacing: 0.08em;">STEP 02</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 24px;">Tap 'Open SWP'</div><div class="body" style="color: var(--ink-soft); flex: 1;">Deep link into the app. Google SSO — no password. Lands on the specific SWP version.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Auth · Google Workspace</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green); letter-spacing: 0.08em;">STEP 03</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 24px;">Read + confirm</div><div class="body" style="color: var(--ink-soft); flex: 1;">Scrolls through. Each hazard is a button they must tap to acknowledge. Can't proceed without.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Gate · all hazards ack'd</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green); letter-spacing: 0.08em;">STEP 04</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 24px;">Hazard quiz</div><div class="body" style="color: var(--ink-soft); flex: 1;">Three questions. Wrong answer stays highlighted until they find the right one. No fail state — it's learning, not testing.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Gate · 100% correct</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green); letter-spacing: 0.08em;">STEP 05</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 24px;">Type name + sign</div><div class="body" style="color: var(--ink-soft); flex: 1;">Signature = typed name matching SSO name. Commit button records row. They see expiry date. Done.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Writes · signoff row + slack confirm</div></div>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; gap: 14px; padding: 16px 22px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; align-items: center;">
+        <div class="mono-sm" style="color: var(--risk-high);">ESCALATION</div>
+        <div class="body">
+          Day 0: DM · Day 3 overdue: DM + supervisor CC in <code>#swp-escalations</code> · Day 7: equipment booking in clubhouse tablet is locked until signed · Day 14: dropped from rota
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">06</div>
+  </section>
+
+  <!-- 07 Supervisor flow -->
+  <section class="slide slide--cream">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>User flow · supervisor</div>
+    </div>
+    <div class="slide-body" style="padding-bottom: 50px;">
+      <div class="eyebrow">Flow B · Andrew on audit morning</div>
+      <div class="hdisplay h3" style="margin-bottom: 32px;">One dashboard, one export.</div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; flex: 1;">
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green);">STEP 01</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 26px;">Opens dashboard</div><div class="body" style="color: var(--ink-soft); flex: 1;">Monday standup. Full compliance matrix — staff × SWP. Red/amber cells pop visually.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">View · /supervisor</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green);">STEP 02</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 26px;">Triages overdue</div><div class="body" style="color: var(--ink-soft); flex: 1;">Sees Ari's Manual Handling is 3 days overdue. One click nudges via Slack. Notes on card.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Action · nudge, reassign</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green);">STEP 03</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 26px;">Runs toolbox talk</div><div class="body" style="color: var(--ink-soft); flex: 1;">Clicks 'Toolbox talk'. Picks SWP. Generates a bulk sign-off session — everyone scans a QR, signs on their phone together.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Mode · group induction</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px;"><div class="mono-sm" style="color: var(--green);">STEP 04</div><div class="hdisplay h4" style="margin: 4px 0; font-size: 26px;">Exports audit CSV</div><div class="body" style="color: var(--ink-soft); flex: 1;">When WorkSafe asks, hits 'Export'. Gets a CSV of every signoff row, filterable by date range. Done.</div><div class="mono-sm" style="color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 6px;">Output · audit-grade CSV</div></div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 22px;">
+        <div class="block" style="display: flex; gap: 18px; align-items: center;">
+          <div style="font-family: var(--font-display); font-size: 60px; color: var(--fairway); line-height: 1;">96%</div>
+          <div><div class="caps">Headline metric</div><div class="body">Compliance rate, rolling. Show on the clubhouse noticeboard. People don't want to be the reason it drops.</div></div>
+        </div>
+        <div class="block" style="display: flex; gap: 18px; align-items: center;">
+          <div style="font-family: var(--font-display); font-size: 60px; color: var(--risk-med); line-height: 1;">3</div>
+          <div><div class="caps">Weekly attention</div><div class="body">Expected overdue count per week given ~10 staff × ~9 SWPs each × 12-month avg cycle. Anything above 5 = investigate.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">07</div>
+  </section>
+
+  <!-- 08 Slack automation spec -->
+  <section class="slide">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Automation spec</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">Slack reminder logic</div>
+      <div class="hdisplay h3" style="margin-bottom: 24px;">Five triggers. One bot.</div>
+
+      <div class="grid-2" style="flex: 1;">
+        <div class="block" style="padding: 24px 28px;">
+          <div class="caps" style="margin-bottom: 14px;">Triggers</div>
+          <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--rule);">
+                <th style="text-align: left; padding: 8px 0; font-family: var(--font-mono); font-size: 10px; color: var(--ink-soft); letter-spacing: 0.08em;">WHEN</th>
+                <th style="text-align: left; padding: 8px 0; font-family: var(--font-mono); font-size: 10px; color: var(--ink-soft); letter-spacing: 0.08em;">TO</th>
+                <th style="text-align: left; padding: 8px 0; font-family: var(--font-mono); font-size: 10px; color: var(--ink-soft); letter-spacing: 0.08em;">PAYLOAD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--rule-soft);"><td style="padding: 10px 8px 10px 0;">expiry &minus; 14d</td><td>staff DM</td><td>heads-up card, no CTA</td></tr>
+              <tr style="border-bottom: 1px solid var(--rule-soft);"><td style="padding: 10px 8px 10px 0;">expiry &minus; 7d</td><td>staff DM</td><td>card + "Open SWP" button</td></tr>
+              <tr style="border-bottom: 1px solid var(--rule-soft);"><td style="padding: 10px 8px 10px 0;">expiry day</td><td>staff DM</td><td>urgent card, amber</td></tr>
+              <tr style="border-bottom: 1px solid var(--rule-soft);"><td style="padding: 10px 8px 10px 0;">+3d overdue</td><td>staff + supervisor</td><td>card + @mention supervisor</td></tr>
+              <tr><td style="padding: 10px 8px 10px 0;">+7d overdue</td><td>supervisor + #swp-escalations</td><td>lockout triggered</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="block block-dark" style="padding: 24px 28px; font-family: var(--font-mono); font-size: 12px; line-height: 1.7;">
+          <div class="caps" style="margin-bottom: 14px;">Zapier flow</div>
+          <div style="color: #c8d6a8;"># daily_06:00_AEST</div>
+          <div>1. <span style="color: #f3ecd8;">Schedule</span> → every day 06:00</div>
+          <div>2. <span style="color: #f3ecd8;">Supabase</span> query expires_at &le; today + 14d</div>
+          <div>3. <span style="color: #f3ecd8;">Filter</span> by lead-time window</div>
+          <div>4. <span style="color: #f3ecd8;">Lookup</span> staff.slack_user_id</div>
+          <div>5. <span style="color: #f3ecd8;">Slack</span> · chat.postMessage (Block Kit)</div>
+          <div style="margin-top: 14px; color: rgba(255,255,255,0.5);">Fallback: if Slack DM fails → email via Gmail. If both fail → supervisor channel within 1hr.</div>
+
+          <div style="margin-top: 20px; padding: 14px; background: rgba(0,0,0,0.25); border-radius: 8px;">
+            <div style="color: #c8d6a8;">// sample block kit</div>
+            <div>{ "type": "section",</div>
+            <div>&nbsp;&nbsp;"text": "Chainsaw SWP — 7d" }</div>
+            <div>{ "type": "actions", "elements": [</div>
+            <div>&nbsp;&nbsp;{ "action_id": "open_swp",</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;"url": "{{app}}/swp/002" }</div>
+            <div>] }</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">08</div>
+  </section>
+
+  <!-- 09 Prototype -->
+  <section class="slide slide--dark">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Prototype</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">Live prototype</div>
+      <div class="hdisplay h2" style="margin-bottom: 18px;">Click through it.</div>
+      <div class="lede" style="margin-bottom: 30px;">
+        A working hi-fi prototype covers: Slack reminder → SWP read &amp; hazard confirmation → typed sign-off → supervisor compliance dashboard → new-hire onboarding. All surfaces toggle via the Tweaks panel.
+      </div>
+
+      <div style="flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+        <a href="Ranfurlie SWP Prototype.html" class="block" style="display: flex; flex-direction: column; text-decoration: none; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); color: var(--cream); transition: all 0.15s;">
+          <div class="caps">Surface 01 · mobile</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 10px 0;">Staff sign-off flow</div>
+          <div class="body" style="color: rgba(255,255,255,0.75); flex: 1;">Slack DM → chainsaw SWP → 6 hazards → 3-q quiz → typed signature. This is the unit of compliance.</div>
+          <div class="mono-sm" style="color: #c8d6a8; margin-top: 14px;">Open →</div>
+        </a>
+        <a href="Ranfurlie SWP Prototype.html" class="block" style="display: flex; flex-direction: column; text-decoration: none; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); color: var(--cream);">
+          <div class="caps">Surface 02 · desktop</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 10px 0;">Supervisor dashboard</div>
+          <div class="body" style="color: rgba(255,255,255,0.75); flex: 1;">Matrix view. Colour-coded cells. KPI header. Click any row → per-staff drill-down. CSV export.</div>
+          <div class="mono-sm" style="color: #c8d6a8; margin-top: 14px;">Tweak → Role: Supervisor</div>
+        </a>
+        <a href="Ranfurlie SWP Prototype.html" class="block" style="display: flex; flex-direction: column; text-decoration: none; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); color: var(--cream);">
+          <div class="caps">Surface 03</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 10px 0;">SWP library</div>
+          <div class="body" style="color: rgba(255,255,255,0.75); flex: 1;">14 SWPs grouped by category. Risk-tagged. Version-stamped. This is what the Python generator feeds.</div>
+          <div class="mono-sm" style="color: #c8d6a8; margin-top: 14px;">Tweak → Role: Admin</div>
+        </a>
+        <a href="Ranfurlie SWP Prototype.html" class="block" style="display: flex; flex-direction: column; text-decoration: none; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); color: var(--cream);">
+          <div class="caps">Surface 04</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 10px 0;">Onboarding flow</div>
+          <div class="body" style="color: rgba(255,255,255,0.75); flex: 1;">New hire: welcome → role-based SWP assignment → training sprint → done. First-week friendly.</div>
+          <div class="mono-sm" style="color: #c8d6a8; margin-top: 14px;">Tweak → Role: New hire</div>
+        </a>
+      </div>
+    </div>
+    <div class="slide-num">09</div>
+  </section>
+
+  <!-- 10 Rollout -->
+  <section class="slide slide--cream">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Rollout</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">Phased plan</div>
+      <div class="hdisplay h3" style="margin-bottom: 28px;">Ship small, earn trust, then extend.</div>
+
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 14px;">
+        <div class="block" style="display: grid; grid-template-columns: 120px 260px 1fr 1.2fr; gap: 20px; align-items: flex-start; background: var(--fairway); color: var(--cream); border-color: var(--fairway);">
+          <div><div class="mono-sm" style="color: #c8d6a8;">PHASE 01</div><div class="hdisplay h4" style="margin-top: 4px; color: var(--cream);">Wk 1–3</div></div>
+          <div><div class="mono-sm" style="color: #c8d6a8; letter-spacing: 0.06em;">TITLE</div><div class="hdisplay h4" style="margin-top: 4px; font-size: 22px; color: var(--cream);">MVP — Chainsaw + Kobelco</div></div>
+          <div><div class="mono-sm" style="color: #c8d6a8; letter-spacing: 0.06em;">OUTCOME</div><div class="body" style="color: rgba(255,255,255,0.85); margin-top: 4px;">2 SWPs live, 10 staff piloted, zero Zapier</div></div>
+          <div><div class="mono-sm" style="color: #c8d6a8; letter-spacing: 0.06em;">WORKSTREAMS</div><ul class="body" style="margin: 4px 0 0; padding-left: 18px; color: rgba(255,255,255,0.85);"><li>Hand-load 2 benchmark SWPs</li><li>Manual sign-off table in Notion</li><li>Marcus DMs reminders by hand (deliberate friction)</li><li>Validate read-and-sign UX before automation</li></ul></div>
+        </div>
+        <div class="block" style="display: grid; grid-template-columns: 120px 260px 1fr 1.2fr; gap: 20px; align-items: flex-start;">
+          <div><div class="mono-sm" style="color: var(--ink-soft);">PHASE 02</div><div class="hdisplay h4" style="margin-top: 4px;">Wk 4–7</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">TITLE</div><div class="hdisplay h4" style="margin-top: 4px; font-size: 22px;">Full library + automation</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">OUTCOME</div><div class="body" style="color: var(--ink-soft); margin-top: 4px;">All 40 SWPs, Slack bot live, nightly Zap</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">WORKSTREAMS</div><ul class="body" style="margin: 4px 0 0; padding-left: 18px; color: var(--ink-soft);"><li>Python generator → Notion API → DB sync</li><li>Slack bot + Block Kit cards</li><li>Zapier scheduled at 06:00 AEST</li><li>Typed-signature sign-off formalised in-app</li></ul></div>
+        </div>
+        <div class="block" style="display: grid; grid-template-columns: 120px 260px 1fr 1.2fr; gap: 20px; align-items: flex-start;">
+          <div><div class="mono-sm" style="color: var(--ink-soft);">PHASE 03</div><div class="hdisplay h4" style="margin-top: 4px;">Wk 8–12</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">TITLE</div><div class="hdisplay h4" style="margin-top: 4px; font-size: 22px;">Supervisor tools + audit</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">OUTCOME</div><div class="body" style="color: var(--ink-soft); margin-top: 4px;">Dashboard, CSV, escalation</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">WORKSTREAMS</div><ul class="body" style="margin: 4px 0 0; padding-left: 18px; color: var(--ink-soft);"><li>Compliance matrix dashboard</li><li>CSV export (WorkSafe-shaped)</li><li>Escalation: day-3 CC, day-7 lockout hook</li><li>Toolbox talk mode (QR bulk sign-off)</li></ul></div>
+        </div>
+        <div class="block" style="display: grid; grid-template-columns: 120px 260px 1fr 1.2fr; gap: 20px; align-items: flex-start;">
+          <div><div class="mono-sm" style="color: var(--ink-soft);">PHASE 04</div><div class="hdisplay h4" style="margin-top: 4px;">Qtr 2</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">TITLE</div><div class="hdisplay h4" style="margin-top: 4px; font-size: 22px;">Polish &amp; contractor flow</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">OUTCOME</div><div class="body" style="color: var(--ink-soft); margin-top: 4px;">Contractor magic-links, mobile PWA</div></div>
+          <div><div class="mono-sm" style="color: var(--green); letter-spacing: 0.06em;">WORKSTREAMS</div><ul class="body" style="margin: 4px 0 0; padding-left: 18px; color: var(--ink-soft);"><li>Magic-link sign-off for contractors (no SSO)</li><li>PWA install, offline read</li><li>Per-SWP analytics: which hazards get most re-taps</li><li>Connect to equipment booking for day-7 lockout</li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">10</div>
+  </section>
+
+  <!-- 11 Risks -->
+  <section class="slide">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie SWP</div>
+      <div>Risks &amp; trade-offs</div>
+    </div>
+    <div class="slide-body">
+      <div class="eyebrow">Things that could trip us up</div>
+      <div class="hdisplay h3" style="margin-bottom: 18px;">What I'm worried about.</div>
+
+      <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px; padding: 18px;"><span class="tag" style="align-self: flex-start; background: var(--risk-high-bg); color: var(--risk-high);">High risk</span><div class="hdisplay h4" style="font-size: 22px; margin: 2px 0;">Sign-off theatre</div><div class="body" style="color: var(--ink-soft); font-size: 14px;">Staff tap through without reading. Hazard checks become muscle memory.</div><div class="body" style="border-top: 1px solid var(--rule); padding-top: 8px; font-size: 13px;"><strong class="mono-sm" style="color: var(--green); text-transform: uppercase;">Mitigation</strong><br>Shuffle hazard order. 2-sec min dwell. Rotating quiz answers. Flag &lt;40-sec sign-offs.</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px; padding: 18px;"><span class="tag" style="align-self: flex-start; background: var(--risk-high-bg); color: var(--risk-high);">High risk</span><div class="hdisplay h4" style="font-size: 22px; margin: 2px 0;">Contractor gap</div><div class="body" style="color: var(--ink-soft); font-size: 14px;">Ari isn't on Slack or Workspace. Current design assumes SSO.</div><div class="body" style="border-top: 1px solid var(--rule); padding-top: 8px; font-size: 13px;"><strong class="mono-sm" style="color: var(--green); text-transform: uppercase;">Mitigation</strong><br>Magic-link email sign-off with IP + name capture. Marked 'contractor signoff', valid 48h.</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px; padding: 18px;"><span class="tag" style="align-self: flex-start; background: var(--risk-med-bg); color: var(--risk-med);">Medium</span><div class="hdisplay h4" style="font-size: 22px; margin: 2px 0;">Version churn</div><div class="body" style="color: var(--ink-soft); font-size: 14px;">Marcus updates chainsaw SWP — does Tom's sign-off still count?</div><div class="body" style="border-top: 1px solid var(--rule); padding-top: 8px; font-size: 13px;"><strong class="mono-sm" style="color: var(--green); text-transform: uppercase;">Mitigation</strong><br>Material change → re-sign in 14d. Editorial → carry forward. Tick-box on update.</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px; padding: 18px;"><span class="tag" style="align-self: flex-start; background: var(--risk-med-bg); color: var(--risk-med);">Medium</span><div class="hdisplay h4" style="font-size: 22px; margin: 2px 0;">Reminder fatigue</div><div class="body" style="color: var(--ink-soft); font-size: 14px;">10 staff × 9 SWPs could mean 2–3 DMs per person weekly. People mute the bot.</div><div class="body" style="border-top: 1px solid var(--rule); padding-top: 8px; font-size: 13px;"><strong class="mono-sm" style="color: var(--green); text-transform: uppercase;">Mitigation</strong><br>Digest mode: one weekly DM summarising due ≤30d. Per-SWP only ≤7d or overdue.</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px; padding: 18px;"><span class="tag" style="align-self: flex-start; background: var(--risk-low-bg); color: var(--risk-low);">Low</span><div class="hdisplay h4" style="font-size: 22px; margin: 2px 0;">Casual drop-off</div><div class="body" style="color: var(--ink-soft); font-size: 14px;">Ruby works 2 Saturdays/month. She'll forget the app. Compliance decays invisibly.</div><div class="body" style="border-top: 1px solid var(--rule); padding-top: 8px; font-size: 13px;"><strong class="mono-sm" style="color: var(--green); text-transform: uppercase;">Mitigation</strong><br>SMS fallback via Twilio. Supervisor 'Casual review' view. Re-verify pre-shift.</div></div>
+        <div class="block" style="display: flex; flex-direction: column; gap: 6px; padding: 18px;"><span class="tag" style="align-self: flex-start; background: var(--risk-low-bg); color: var(--risk-low);">Low</span><div class="hdisplay h4" style="font-size: 22px; margin: 2px 0;">Scope creep</div><div class="body" style="color: var(--ink-soft); font-size: 14px;">Leadership sees the dashboard and wants leave, incidents, reviews bolted on.</div><div class="body" style="border-top: 1px solid var(--rule); padding-top: 8px; font-size: 13px;"><strong class="mono-sm" style="color: var(--green); text-transform: uppercase;">Mitigation</strong><br>Hard scope: SWP sign-off only. Incidents stay separate. Say no politely and often.</div></div>
+      </div>
+    </div>
+    <div class="slide-num">11</div>
+  </section>
+
+  <!-- 12 Close -->
+  <section class="slide slide--dark">
+    <div class="slide-chrome">
+      <div class="brand"><div class="brand-dot">R</div> Ranfurlie Golf Club</div>
+      <div>Next steps</div>
+    </div>
+    <div class="slide-body" style="justify-content: space-between;">
+      <div>
+        <div class="eyebrow">Asks</div>
+        <div class="hdisplay h2" style="max-width: 1100px; margin-bottom: 24px;">
+          Three decisions unlock<br>the MVP sprint.
+        </div>
+        <div class="lede" style="max-width: 900px;">I've made a recommendation on each. I'd like a thumbs-up or redirect — then we can start building next Monday.</div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 50px;">
+        <div class="block">
+          <div class="caps" style="color: #c8d6a8;">Decision 01</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 8px 0;">Build or buy?</div>
+          <div class="body" style="color: rgba(255,255,255,0.78);">Recommend build (~3 weeks). Off-the-shelf (SafetyCulture, MangoApps) is $5k+/yr and overkill.</div>
+        </div>
+        <div class="block">
+          <div class="caps" style="color: #c8d6a8;">Decision 02</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 8px 0;">Sign-off method</div>
+          <div class="body" style="color: rgba(255,255,255,0.78);">Recommend typed name + SSO + IP. Defensible, zero friction, no hardware.</div>
+        </div>
+        <div class="block">
+          <div class="caps" style="color: #c8d6a8;">Decision 03</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin: 8px 0;">Lockout teeth</div>
+          <div class="body" style="color: rgba(255,255,255,0.78);">Recommend day-7 booking lockout. Without teeth, reminders are wallpaper.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.15);">
+        <div>
+          <div class="mono-sm" style="color: rgba(255,255,255,0.5);">Prepared by</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin-top: 4px;">Ranfurlie SWP working group</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="mono-sm" style="color: rgba(255,255,255,0.5);">Open the prototype</div>
+          <div class="hdisplay h4" style="color: var(--cream); margin-top: 4px;"><a href="Ranfurlie SWP Prototype.html" style="color: var(--cream); text-decoration: underline;">swp.ranfurliegolf.com.au →</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">12</div>
+  </section>
+
+</deck-stage>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="deck-stage.js"></script>
+</body>
+</html>
